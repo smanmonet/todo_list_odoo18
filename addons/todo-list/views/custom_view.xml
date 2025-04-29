@@ -1,0 +1,41 @@
+<odoo>
+    <record id="view_form_to_do_list" model="ir.ui.view">
+        <field name="name">to.do.list.form</field>
+        <field name="model">to.do.list</field>
+        <field name="arch" type="xml">
+            <form string="To Do List">
+                <header>
+                    <group>
+                        <!-- ปุ่ม PROGRESS -->
+                        <button name="action_start_progress"
+                                string="PROGRESS"
+                                type="object"
+                                class="btn-primary"
+                                props="{'invisible': [('status', '!=', 'draft')]}"/>
+                        <!-- ปุ่ม DONE -->
+                        <!-- <button name="action_mark_done"
+                                string="DONE"
+                                type="object"
+                                class="btn-success"
+                                props="{'invisible': [('status', '!=', 'in_progress')]}"/> -->
+                    </group>    
+                    <field name="status" widget="statusbar" statusbar_visible="draft,in_progress,completed"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="title"/>
+                    </group>
+                    <group>
+                        <group>
+                            <field name="tags" widget="many2many_tags"/>
+                        </group>
+                        <group>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>
