@@ -8,8 +8,8 @@
     'website': 'http://www.example.com/',
     'depends': ['base'],
     'data': [
-        'views/custom_view.xml',  
-        'views/custom_menus.xml',
+        'views/todo_view.xml',  
+        'views/todo_menus.xml',
         'data/todo_tag_data.xml',
         'security/ir.model.access.csv',  
     ],
