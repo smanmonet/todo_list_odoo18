@@ -1,8 +1,9 @@
-from odoo import models, fields
+from odoo import models, fields, api
 
 class TodoList(models.Model):
     _name = 'todo.lists'
     _description = 'To Do List'
+    _rec_name = 'title'
 
     title = fields.Char(
         string="Title", required=True)
@@ -11,36 +12,34 @@ class TodoList(models.Model):
     status = fields.Selection([
         ('draft', 'Draft'),
         ('in_progress', 'In Progress'),
-        ('completed', 'Completed'),
+        ('complete', 'Completed'),
     ], default='draft')
     start_date = fields.Datetime(
         string="Start Date", required=True)
     end_date = fields.Datetime(
         string="End Date", required=True)
     
-    name = fields.Char(
-        string="Name")
+    details_ids = fields.One2many(
+        'todo.details',
+        'todo_list_id',
+        string="Program",
+    )
     
-    description = fields.Char(
-        string="Description")
-    
-    is_complete = fields.Char(
-        string="Is Complete")
-
     def action_start_progress(self):
-        for rec in self:
-            if rec.status != 'draft':
-                return 'Can only start progress from Draft.'
-            rec.status = 'in_progress'
-
-    def action_mark_done(self):
-        for rec in self:
-            if rec.status != 'in_progress':
-                return 'Can only mark done from In Progress.'
-            rec.status = 'completed'
+        for record in self:
+            record.status = 'in_progress'
             
-    def action_list(self):
-        pass
+    def action_mark_done(self):
+        for record in self:
+            record.status = 'complete'
     
-    def action_attendee(self):
-        pass
+    @api.onchange('details_ids.is_complete')
+    def all_details_completed(self):
+        for record in self:
+            if all(details.is_complete for details in record.details_ids):
+                record.check_completed = True
+            else:
+                record.check_completed = False
+                
+    user_id = fields.Many2many('res.users', string="Attendee")
+    check_completed = fields.Boolean(string='Is Complete',compute='all_details_completed')

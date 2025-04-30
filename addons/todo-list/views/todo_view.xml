@@ -20,42 +20,41 @@
         <field name="arch" type="xml">
             <form string="To Do List">
                 <header>
-                    <group>
-                        <button name="action_start_progress"
-                                string="PROGRESS"
-                                type="object"
-                                class="btn-primary"/>
-                    </group>    
-                    <field name="status" widget="statusbar" statusbar_visible="draft,in_progress,completed"/>
+                    <button name="action_start_progress" string="PROGRESS" type="object" class="oe_highlight" invisible="status != 'draft'"/>
+                    <button name="action_mark_done" string="Done" type="object" class="oe_highlight" invisible="not check_completed or status == 'complete'"/>
+                    <field name="status" widget="statusbar" statusbar_visible="draft,in_progress,complete"/>
                 </header>
                 <sheet>
                     <group>
-                        <field name="title"/>
+                        <field name="title" readonly="status == 'complete'"/>
                     </group>
                     <group>
                         <group>
-                            <field name="tags" widget="many2many_tags"/>
+                            <field name="tags" widget="many2many_tags"  readonly="status == 'complete'"/>
                         </group>
                         <group>
-                            <field name="start_date"/>
-                            <field name="end_date"/>
+                            <field name="start_date"  readonly="status == 'complete'"/>
+                            <field name="end_date"  readonly="status == 'complete'"/>
                         </group>
-                    </group>
-                    <group>
-                        <button name="action_list" string="List" type="object" class="btn-primary"/>
-                        <button name="action_attendee" string="Attendee" type="object" class="btn-primary"/>
-                    </group>          
-                    <group>
-                        <group>
-                            <field name="name"/>
-                        </group>
-                        <group>
-                            <field name="description"/>
-                        </group>
-                        <group>
-                            <field name="is_complete"/>
-                        </group>
-                    </group>                             
+                    </group>       
+                    <notebook>
+                        <page string="List">
+                            <field name="details_ids" readonly="status == 'complete'">
+                                <list editable="bottom">
+                                    <field name="name"/>
+                                    <field name="description"/>
+                                    <field name="is_complete" column_invisible="parent.status not in ('in_progress', 'complete')"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Attendee">
+                            <field name="user_id" readonly="status == 'complete'">
+                                <list editable="bottom">
+                                    <field name="name" string="Attendee" widget="one2many_list"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>                          
                 </sheet>
             </form>
         </field>
