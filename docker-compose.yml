@@ -1,4 +1,4 @@
-version: '3.1'
+version: "3.1"
 services:
   web:
     image: odoo:18
@@ -9,6 +9,8 @@ services:
     volumes:
       - ./addons:/mnt/extra-addons
       - ./etc/odoo.conf:/etc/odoo/odoo.conf
+      - /path/to/odoo.conf:/etc/odoo/odoo.conf
+
     environment:
       - HOST=localhost
       - DB_PORT=5432
